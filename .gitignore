@@ -1,0 +1,7 @@
+
+*.sw[op]?
+.env
+*.log
+.vscode
+.pio
+
