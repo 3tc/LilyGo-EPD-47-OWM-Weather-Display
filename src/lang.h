@@ -16,11 +16,11 @@ const String TXT_SNOWFALL_MM = "Snowfall (mm)";
 const String TXT_SNOWFALL_IN = "Snowfall (in)";
 
 //Moon
-const String TXT_MOON_NEW             = "New";
+const String TXT_MOON_NEW             = "New Moon";
 const String TXT_MOON_WAXING_CRESCENT = "Waxing Crescent";
 const String TXT_MOON_FIRST_QUARTER   = "First Quarter";
 const String TXT_MOON_WAXING_GIBBOUS  = "Waxing Gibbous";
-const String TXT_MOON_FULL            = "Full";
+const String TXT_MOON_FULL            = "Full Moon";
 const String TXT_MOON_WANING_GIBBOUS  = "Waning Gibbous";
 const String TXT_MOON_THIRD_QUARTER   = "Third Quarter";
 const String TXT_MOON_WANING_CRESCENT = "Waning Crescent";
