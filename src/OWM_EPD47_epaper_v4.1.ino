@@ -571,20 +571,28 @@ int countReadings() {
 // display local weather observations
 void DisplayGraphSection(int x, int y) {
   int r = 0;
+  int pressure_min = 1500;
+  int pressure_max = 500;
   do { 
     if (Units == "I") pressure_readings[r] = LocalObservations[r].Pressure * 0.02953;   else pressure_readings[r] = LocalObservations[r].Pressure;
+    int hpa = pressure_readings[r];
+    if (hpa > 500) {
+      if (hpa > pressure_max) pressure_max = hpa;
+      if (hpa < pressure_min) pressure_min = hpa;
+    }
     if (Units == "I") rain_readings[r]     = LocalObservations[r].Rainfall * 0.0393701; else rain_readings[r]     = LocalObservations[r].Rainfall;
     if (Units == "I") snow_readings[r]     = LocalObservations[r].Snowfall * 0.0393701; else snow_readings[r]     = LocalObservations[r].Snowfall;
     temperature_readings[r]                = LocalObservations[r].Temperature;
     humidity_readings[r]                   = LocalObservations[r].Humidity;
     r++;
   } while (r < max_readings);
+  Serial.println("Pressure min/max " + String(pressure_min) + "/" + String(pressure_max));
   int gwidth = 175, gheight = 100;
   int gx = (SCREEN_WIDTH - gwidth * 4) / 5 + 8;
   int gy = (SCREEN_HEIGHT - gheight - 30);
   int gap = gwidth + gx;
   // (x,y,width,height,MinValue, MaxValue, Title, Data Array, AutoScale, ChartMode)
-  DrawGraph(gx + 0 * gap, gy, gwidth, gheight, 900, 1050, Units == "M" ? TXT_PRESSURE_HPA : TXT_PRESSURE_IN, pressure_readings, max_readings, autoscale_on, barchart_off);
+  DrawGraph(gx + 0 * gap, gy, gwidth, gheight, pressure_min, pressure_max, Units == "M" ? TXT_PRESSURE_HPA : TXT_PRESSURE_IN, pressure_readings, max_readings, autoscale_off, barchart_off);
   DrawGraph(gx + 1 * gap, gy, gwidth, gheight, 10, 30,    Units == "M" ? TXT_TEMPERATURE_C : TXT_TEMPERATURE_F, temperature_readings, max_readings, autoscale_on, barchart_off);
   DrawGraph(gx + 2 * gap, gy, gwidth, gheight, 0, 100,   TXT_HUMIDITY_PERCENT, humidity_readings, max_readings, autoscale_off, barchart_off);
   if (SumOfPrecip(rain_readings, max_readings) >= SumOfPrecip(snow_readings, max_readings))
@@ -980,9 +988,9 @@ void DrawGraph(int x_pos, int y_pos, int gwidth, int gheight, float Y1Min, float
   drawRect(x_pos, y_pos, gwidth + 3, gheight + 2, Grey);
   drawString(x_pos - 20 + gwidth / 2, y_pos - 28, title, CENTER);
   for (int gx = 0; gx < readings; gx++) {
-    x2 = x_pos + gx * gwidth / (readings - 1) - 1 ; // max_readings is the global variable that sets the maximum data that can be plotted
-    y2 = y_pos + (Y1Max - constrain(DataArray[gx], Y1Min, Y1Max)) / (Y1Max - Y1Min) * gheight + 1;
     if (gx < local_reading_count) {
+      x2 = x_pos + gx * gwidth / (readings - 1) - 1 ; // max_readings is the global variable that sets the maximum data that can be plotted
+      y2 = y_pos + (Y1Max - constrain(DataArray[gx], Y1Min, Y1Max)) / (Y1Max - Y1Min) * gheight + 1;
       if (barchart_mode) {
         fillRect(last_x + 2, y2, (gwidth / readings) - 1, y_pos + gheight - y2 + 2, Black);
       } else {

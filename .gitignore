@@ -4,4 +4,4 @@
 *.log
 .vscode
 .pio
-
+*.private
